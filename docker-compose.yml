@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: seguridad_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: seguridad_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - seguridad_network
+
+  api:
+    build: .
+    container_name: seguridad_api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: seguridad_db
+      DB_PORT: 5432
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    command: ["node", "server.js"]
+    networks:
+      - seguridad_network
+
+networks:
+  seguridad_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
