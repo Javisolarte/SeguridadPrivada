@@ -1,43 +1,23 @@
-'use strict';
+const Empleado = require("./empleado");
+const Turno = require("./turno");
+const Asistencia = require("./asistencia");
+const Cliente = require("./cliente");
+const Minuta = require("./minuta");
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+Empleado.hasMany(Turno, { foreignKey: "empleadoId" });
+Turno.belongsTo(Empleado, { foreignKey: "empleadoId" });
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
-}
+Empleado.hasMany(Asistencia, { foreignKey: "empleadoId" });
+Asistencia.belongsTo(Empleado, { foreignKey: "empleadoId" });
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    );
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
+Turno.hasMany(Asistencia, { foreignKey: "turnoId" });
+Asistencia.belongsTo(Turno, { foreignKey: "turnoId" });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
+Cliente.hasMany(Turno, { foreignKey: "clienteId" });
+Turno.belongsTo(Cliente, { foreignKey: "clienteId" });
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+Empleado.hasMany(Minuta, { foreignKey: "empleadoId" });
+Minuta.belongsTo(Empleado, { foreignKey: "empleadoId" });
 
-module.exports = db;
+Turno.hasMany(Minuta, { foreignKey: "turnoId" });
+Minuta.belongsTo(Turno, { foreignKey: "turnoId" });
