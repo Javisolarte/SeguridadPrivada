@@ -12,8 +12,7 @@ Este proyecto tiene como objetivo proporcionar una API REST para gestionar los h
 
 ## Instrucciones de Despliegue
 
-### 1. Clonar el Repositorio
-```bash
+### 1. Clonar el Repositorio 
 git clone https://github.com/Javisolarte/SeguridadPrivada.git
 cd SeguridadPrivada
 2. Instalar Dependencias
@@ -33,6 +32,7 @@ DB_NAME=seguridad_db
 DB_HOST=localhost
 PORT=3000
 JWT_SECRET=tu_secreto
+
 4. Ejecutar la API
 Para iniciar el servidor, ejecuta:
 

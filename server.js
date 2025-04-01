@@ -1,25 +1,29 @@
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+
+const swaggerDocs = require("./swagger"); // Importación correcta
+
 const app = express();
-const { Sequelize } = require('sequelize');
 
-// Configura Sequelize con los valores del contenedor
-const sequelize = new Sequelize('seguridad_db', 'postgres', 'postgres', {
-  host: 'db', // Nombre del servicio de la base de datos en docker-compose
-  dialect: 'postgres',
-  logging: false, // Puedes poner true si quieres ver las consultas SQL en la consola
-});
+// Middlewares
+app.use(express.json());
+app.use(cors());
+app.use(helmet());
 
-app.get('/test-connection', async (req, res) => {
-  try {
-    await sequelize.authenticate(); // Intenta hacer una conexión de prueba
-    res.status(200).send('Conexión exitosa a la base de datos!');
-  } catch (error) {
-    console.error('No se pudo conectar a la base de datos:', error);
-    res.status(500).send('Error de conexión a la base de datos');
-  }
+// Importar rutas
+const usuariosRoutes = require("./routes/usuarios");
+app.use("/api", usuariosRoutes);
+
+// Documentación Swagger (¡Importante! Debe ir después de las rutas)
+swaggerDocs(app);
+
+app.get("/", (req, res) => {
+  res.send("API Seguridad Funcionando 🚀");
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
