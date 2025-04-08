@@ -16,6 +16,18 @@ app.use(helmet());
 const usuariosRoutes = require("./routes/usuarios");
 app.use("/api", usuariosRoutes);
 
+const clientesRoutes = require("./routes/clientes");
+app.use("/api", clientesRoutes);
+
+const puntosSeguridadRoutes = require("./routes/puntosSeguridad");
+app.use("/api", puntosSeguridadRoutes);
+
+
+const rolesRoutes = require("./routes/roles"); // Nuevas rutas para roles
+app.use("/api", rolesRoutes);
+
+const empleadosRoutes = require("./routes/empleados");
+app.use("/api", empleadosRoutes);
 // Documentación Swagger (¡Importante! Debe ir después de las rutas)
 swaggerDocs(app);
 

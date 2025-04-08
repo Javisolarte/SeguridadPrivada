@@ -1,25 +1,39 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = (sequelize) => {
-  class Cliente extends Model {
-    static associate(models) {
-      // Un cliente puede tener muchos turnos asignados
-      Cliente.hasMany(models.Turno, {
-        foreignKey: "clienteId",
-        as: "turnos",
-      });
-    }
-  }
+  class Cliente extends Model {}
 
   Cliente.init(
     {
-      nombre: DataTypes.STRING,
-      direccion: DataTypes.STRING,
-      contacto: DataTypes.STRING,
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
+      nombre: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+      },
+      direccion: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
+      telefono: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+      },
+      email: {
+        type: DataTypes.STRING(100),
+        allowNull: true,
+        validate: {
+          isEmail: true, // Valida que el email tenga un formato correcto (si se proporciona)
+        },
+      },
     },
     {
       sequelize,
       modelName: "Cliente",
+      tableName: "clientes",
     }
   );
 

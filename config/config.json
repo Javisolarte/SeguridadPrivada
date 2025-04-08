@@ -1,23 +1,26 @@
 {
   "development": {
     "username": "postgres",
-    "password": "1004192496",
+    "password": "postgres",
     "database": "seguridad_db",
-    "host": "localhost", 
+    "host": "db", 
+    "port": 5432,
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": "postgres",
     "database": "seguridad_db_test",
-    "host": "db", 
+    "host": "db",
+    "port": 5432,
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": "postgres",
-    "database": "seguridad_db",
-    "host": "db",  
+    "database": "seguridad_db_production",
+    "host": "db",
+    "port": 5432,
     "dialect": "postgres"
   }
 }
