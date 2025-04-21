@@ -28,6 +28,18 @@ app.use("/api", rolesRoutes);
 
 const empleadosRoutes = require("./routes/empleados");
 app.use("/api", empleadosRoutes);
+
+
+
+
+const turnosRoutes = require("./routes/turnos"); // Nuevas rutas para turnos
+const asistenciasRoutes = require("./routes/asistencias"); // Nuevas rutas para asistencias
+const horariosRotativosRoutes = require("./routes/horariosRotativos"); // Nuevas rutas para horarios rotativos
+
+
+app.use("/api", turnosRoutes);
+app.use("/api", asistenciasRoutes);
+app.use("/api", horariosRotativosRoutes);
 // Documentación Swagger (¡Importante! Debe ir después de las rutas)
 swaggerDocs(app);
 

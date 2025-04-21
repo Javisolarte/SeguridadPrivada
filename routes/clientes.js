@@ -123,8 +123,8 @@ router.post("/clientes", async (req, res) => {
       email: email ? email.toLowerCase() : null,
     });
     res.status(201).json(nuevoCliente);
-  } catch (error) {
-    res.status(500).json({ error: "Error al crear cliente" });
+  }catch (error) {
+    res.status(400).json({ error: "Error al crear cliente", details: error.message });
   }
 });
 

@@ -21,6 +21,7 @@ const Asistencia = require("./asistencia")(sequelize);
 const Cliente = require("./cliente")(sequelize);
 const Minuta = require("./minuta")(sequelize);
 const Rol = require("./rol")(sequelize);
+const HorarioRotativo = require("./horarioRotativo")(sequelize);
 
 // Define las relaciones
 const models = {
@@ -31,6 +32,7 @@ const models = {
   Minuta,
   PuntoSeguridad,
   Rol,
+  HorarioRotativo,
 };
 
 // Relaciones existentes
@@ -43,8 +45,8 @@ Asistencia.belongsTo(Empleado, { foreignKey: "empleadoId", as: "empleadoAsistenc
 Turno.hasMany(Asistencia, { foreignKey: "turnoId", onDelete: "CASCADE", as: "asistenciasTurno" });
 Asistencia.belongsTo(Turno, { foreignKey: "turnoId", as: "turnoAsistencia" });
 
-Cliente.hasMany(Turno, { foreignKey: "clienteId", onDelete: "CASCADE", as: "turnosCliente" });
-Turno.belongsTo(Cliente, { foreignKey: "clienteId", as: "clienteTurno" });
+// Cliente.hasMany(Turno, { foreignKey: "clienteId", onDelete: "CASCADE", as: "turnosCliente" });
+// Turno.belongsTo(Cliente, { foreignKey: "clienteId", as: "clienteTurno" });
 
 Empleado.hasMany(Minuta, { foreignKey: "empleadoId", onDelete: "CASCADE", as: "minutas" });
 Minuta.belongsTo(Empleado, { foreignKey: "empleadoId", as: "empleadoMinuta" });
@@ -58,6 +60,15 @@ PuntoSeguridad.belongsTo(Cliente, { foreignKey: "cliente_id", as: "clientePunto"
 Rol.hasMany(Empleado, { foreignKey: "rol_id", onDelete: "RESTRICT", as: "empleados" });
 Empleado.belongsTo(Rol, { foreignKey: "rol_id", as: "rol" });
 
+
+PuntoSeguridad.hasMany(HorarioRotativo, { foreignKey: "punto_seguridad_id", onDelete: "CASCADE", as: "horariosRotativos" });
+HorarioRotativo.belongsTo(PuntoSeguridad, { foreignKey: "punto_seguridad_id", as: "puntoSeguridad" });
+
+Empleado.hasMany(HorarioRotativo, { foreignKey: "empleado_id", onDelete: "CASCADE", as: "horariosRotativos" });
+HorarioRotativo.belongsTo(Empleado, { foreignKey: "empleado_id", as: "empleado" });
+
+Turno.hasMany(HorarioRotativo, { foreignKey: "turno_id", onDelete: "CASCADE", as: "horariosRotativosTurno" });
+HorarioRotativo.belongsTo(Turno, { foreignKey: "turno_id", as: "turno" });
 // Ejecuta el método associate de cada modelo (si existe)
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
@@ -76,4 +87,5 @@ module.exports = {
   Minuta,
   PuntoSeguridad,
   Rol,
+  HorarioRotativo,
 };
