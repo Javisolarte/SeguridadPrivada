@@ -13,15 +13,15 @@ const sequelize = new Sequelize(
   }
 );
 
-// Importa los modelos
-const PuntoSeguridad = require("./puntoSeguridad")(sequelize);
-const Empleado = require("./empleado")(sequelize);
-const Turno = require("./turno")(sequelize);
-const Asistencia = require("./asistencia")(sequelize);
-const Cliente = require("./cliente")(sequelize);
-const Minuta = require("./minuta")(sequelize);
-const Rol = require("./rol")(sequelize);
-const HorarioRotativo = require("./horarioRotativo")(sequelize);
+// Importa los modelos y pasa tanto sequelize como Sequelize.DataTypes
+const PuntoSeguridad = require("./puntoSeguridad")(sequelize, Sequelize.DataTypes);
+const Empleado = require("./empleado")(sequelize, Sequelize.DataTypes);
+const Turno = require("./turno")(sequelize, Sequelize.DataTypes);
+const Asistencia = require("./asistencia")(sequelize, Sequelize.DataTypes);
+const Cliente = require("./cliente")(sequelize, Sequelize.DataTypes);
+const Minuta = require("./minuta")(sequelize, Sequelize.DataTypes);
+const Rol = require("./rol")(sequelize, Sequelize.DataTypes);
+const HorarioRotativo = require("./horarioRotativo")(sequelize, Sequelize.DataTypes);
 
 // Define las relaciones
 const models = {
@@ -39,11 +39,11 @@ const models = {
 Empleado.hasMany(Turno, { foreignKey: "empleadoId", onDelete: "CASCADE", as: "turnos" });
 Turno.belongsTo(Empleado, { foreignKey: "empleadoId", as: "empleadoTurno" });
 
-Empleado.hasMany(Asistencia, { foreignKey: "empleadoId", onDelete: "CASCADE", as: "asistencias" });
-Asistencia.belongsTo(Empleado, { foreignKey: "empleadoId", as: "empleadoAsistencia" });
+Empleado.hasMany(Asistencia, { foreignKey: "empleado_id", onDelete: "CASCADE", as: "asistencias" });
+Asistencia.belongsTo(Empleado, { foreignKey: "empleado_id", as: "empleadoAsistencia" });
 
-Turno.hasMany(Asistencia, { foreignKey: "turnoId", onDelete: "CASCADE", as: "asistenciasTurno" });
-Asistencia.belongsTo(Turno, { foreignKey: "turnoId", as: "turnoAsistencia" });
+Turno.hasMany(Asistencia, { foreignKey: "turno_id", onDelete: "CASCADE", as: "asistenciasTurno" });
+Asistencia.belongsTo(Turno, { foreignKey: "turno_id", as: "turnoAsistencia" });
 
 // Cliente.hasMany(Turno, { foreignKey: "clienteId", onDelete: "CASCADE", as: "turnosCliente" });
 // Turno.belongsTo(Cliente, { foreignKey: "clienteId", as: "clienteTurno" });
@@ -60,7 +60,6 @@ PuntoSeguridad.belongsTo(Cliente, { foreignKey: "cliente_id", as: "clientePunto"
 Rol.hasMany(Empleado, { foreignKey: "rol_id", onDelete: "RESTRICT", as: "empleados" });
 Empleado.belongsTo(Rol, { foreignKey: "rol_id", as: "rol" });
 
-
 PuntoSeguridad.hasMany(HorarioRotativo, { foreignKey: "punto_seguridad_id", onDelete: "CASCADE", as: "horariosRotativos" });
 HorarioRotativo.belongsTo(PuntoSeguridad, { foreignKey: "punto_seguridad_id", as: "puntoSeguridad" });
 
@@ -69,6 +68,7 @@ HorarioRotativo.belongsTo(Empleado, { foreignKey: "empleado_id", as: "empleado" 
 
 Turno.hasMany(HorarioRotativo, { foreignKey: "turno_id", onDelete: "CASCADE", as: "horariosRotativosTurno" });
 HorarioRotativo.belongsTo(Turno, { foreignKey: "turno_id", as: "turno" });
+
 // Ejecuta el método associate de cada modelo (si existe)
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
