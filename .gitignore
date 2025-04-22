@@ -1,0 +1,107 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+*.sw?
+
+# Build output
+dist/
+build/
+out/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Mac and Linux trash
+.trash/
+
+# Docker files (opcional)
+.dockerignore
+
+# Git config local (por si usás uno personalizado)
+.gitconfig
+
+# Optional REPL history
+.node_repl_history
+
+# Sentry CLI
+.sentryclirc
+
+# PM2 logs
+pids
+*.pid
+*.seed
+
+# Binaries
+*.exe
+*.dll
+*.so
+
+# Next.js
+.next/
+
+# Nuxt.js
+.nuxt/
+
+# Remix
+.build/
+
+# Expo
+.expo/
+
+# Firebase
+.firebase/
+
+# Turborepo
+turbo/
+
+# Bun
+.bun/
+
+# Playwright
+test-results/
+.playwright/
+
+# Coverage reports
+coverage/
+lcov-report/
+
+# Bun cache
+.bun/
+
+# Prisma
+.prisma/
+
+# Custom cache
+.cache/
