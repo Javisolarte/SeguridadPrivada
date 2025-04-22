@@ -1,0 +1,11 @@
+{
+  "realm": "seguridad-realm",
+  "auth-server-url": "http://keycloak:8080/",
+  "ssl-required": "none",
+  "resource": "seguridad-api",
+  "credentials": {
+    "secret": "<client-secret>"
+  },
+  "confidential-port": 0,
+  "policy-enforcer": {}
+}
