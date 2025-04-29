@@ -14,10 +14,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "express-jwt": "^8.5.1",
     "express-oauth2-jwt-bearer": "^1.6.1",
     "express-session": "^1.18.1",
+    "express-sessions": "^1.0.6",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
     "keycloak-connect": "^26.1.1",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
@@ -26,6 +29,10 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express-session": "^1.18.1",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.9",
     "sequelize-cli": "^6.6.2"
   },
