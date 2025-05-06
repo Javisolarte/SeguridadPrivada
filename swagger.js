@@ -47,15 +47,14 @@ const swaggerSpec = swaggerJSDoc(options);
 
 function swaggerDocs(app) {
   app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec, {
-    oauth2RedirectUrl: 'http://localhost:3000/api-docs/oauth2-redirect.html', // Esto debería funcionar bien
     swaggerOptions: {
+      oauth2RedirectUrl: 'http://localhost:3000/api-docs/oauth2-redirect.html', // Esto debería funcionar bien
       oauth: {
         clientId: "api-node", // Verifica que este sea el cliente configurado en Keycloak
-        clientSecret: "6YaDNgEfnQtlU56xBsQZ3U7v3vMFKrpL", // Aquí es importante que uses tu secret de Keycloak si estás usando el flujo Authorization Code
         scopes: "openid",
         usePkceWithAuthorizationCodeGrant: true,
       },
-      persistAuthorization: true,
+      persistAuthorization: false,
     },
   }));
   console.log("📄 Swagger disponible en http://localhost:3000/api-docs");

@@ -55,6 +55,8 @@ services:
       - KC_HTTP_PORT=8080
       - KC_HTTPS_PORT=8443
       - KC_HTTP_ENABLED=true  # Habilitamos explícitamente HTTP
+      - KC_CORS=true  # Habilitamos CORS
+      - KC_CORS_ORIGINS=http://localhost:3000  # Permitimos el origen de la API
       - KC_HOSTNAME_STRICT_HTTPS=false  # Deshabilitamos la obligatoriedad de HTTPS
     command: ["start-dev"]  # Cambiamos a modo desarrollo
     ports:
