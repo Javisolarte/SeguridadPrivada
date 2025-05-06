@@ -3,7 +3,7 @@ const express = require('express');
 const session = require('express-session');
 const cors = require('cors');
 const bodyparser = require('body-parser');
-// const verifyKeycloakToken = require("./middlewares/verifyKeycloakToken");
+const verifyKeycloakToken = require("./middlewares/verifyKeycloakToken");
 
 const { sequelize } = require('./models');
 const { keycloak, memoryStore } = require('./middlewares/keycloak');
@@ -27,16 +27,16 @@ app.use(bodyparser.json());
 app.use(express.json());
 
 //Middleware con exclusión manual de rutas públicas
-// app.use((req, res, next) => {
-//   const publicPaths = ["/api-docs", "/swagger-ui", "/swagger.json", "/"];
-//   const isPublic = publicPaths.some((path) => req.path.startsWith(path));
+app.use((req, res, next) => {
+  const publicPaths = ["/api-docs", "/swagger-ui", "/swagger.json"];
+  const isPublic = publicPaths.some((path) => req.path.startsWith(path));
 
-//   if (isPublic) {
-//     return next();
-//   }
+  if (isPublic) {
+    return next();
+  }
 
-//   verifyKeycloakToken(req, res, next);
-// });
+  verifyKeycloakToken(req, res, next);
+});
 
 
 // Configurar la sesión
