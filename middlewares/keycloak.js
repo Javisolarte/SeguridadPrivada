@@ -8,10 +8,10 @@ const keycloakConfig = JSON.parse(fs.readFileSync('./keycloak.json'));
 // Crear store de sesión en memoria (requerido por Keycloak)
 const memoryStore = new session.MemoryStore();
 
-// Creamos la instancia de Keycloak
+// Crear instancia de Keycloak
 const keycloak = new Keycloak({ store: memoryStore }, keycloakConfig);
 
 module.exports = {
   memoryStore,
-  keycloak
+  keycloak,
 };

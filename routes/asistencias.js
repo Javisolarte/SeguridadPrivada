@@ -95,6 +95,8 @@ router.get("/asistencias", async (req, res) => {
  * /api/asistencias/{id}:
  *   get:
  *     summary: Obtiene una asistencia por ID
+ *      security:
+ *       - keycloak: [openid]
  *     tags: [Asistencias]
  *     parameters:
  *       - in: path
@@ -102,7 +104,8 @@ router.get("/asistencias", async (req, res) => {
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID de la asistencia
+ *         description: ID de la asistencia a obtener
+ *         
  *     responses:
  *       200:
  *         description: Asistencia obtenida exitosamente

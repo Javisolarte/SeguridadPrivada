@@ -1,99 +1,91 @@
 require("dotenv").config();
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
-const bodyparser = require('body-parser');
-const verifyKeycloakToken = require("./middlewares/verifyKeycloakToken");
+const express = require("express");
+const session = require("express-session");
+const Keycloak = require("keycloak-connect");
+const fs = require("fs");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 
-const { sequelize } = require('./models');
-const { keycloak, memoryStore } = require('./middlewares/keycloak');
-const swaggerDocs = require('./swagger');
+const verifyKeycloakToken = require("./middlewares/verifyKeycloakToken");
+const swaggerDocs = require("./swagger");
+const { sequelize } = require("./models");
+
+// Configuración de Keycloak
+const keycloakConfig = JSON.parse(fs.readFileSync("./keycloak.json"));
+const memoryStore = new session.MemoryStore();
+const keycloak = new Keycloak({ store: memoryStore }, keycloakConfig);
 
 const app = express();
 
-// Configuración de middlewars generales
+// Configuración de CORS para mejorar la seguridad y permitir múltiples dominios
+app.use(cors({
+  origin: ["http://localhost:3000", "https://tudominio.com"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
 
-// Configuración de CORS
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
+// Configuración de sesión con una clave secreta más segura y ajustes recomendados
+app.use(session({
+  secret: process.env.SESSION_SECRET || "una-clave-secreta",
+  resave: false,
+  saveUninitialized: true,
+  store: memoryStore,
+  cookie: { secure: process.env.NODE_ENV === "production" } // Solo usar cookies seguras en producción
+}));
 
-
-app.use(bodyparser.json());
+// Inicializar Keycloak y parseadores
+app.use(keycloak.middleware());
+app.use(bodyParser.json());
 app.use(express.json());
 
-//Middleware con exclusión manual de rutas públicas
+// Middleware para proteger rutas con token (excepto las públicas)
+const publicPaths = ["/api-docs", "/swagger-ui", "/swagger.json", "/api/public"];
 app.use((req, res, next) => {
-  const publicPaths = ["/api-docs", "/swagger-ui", "/swagger.json"];
-  const isPublic = publicPaths.some((path) => req.path.startsWith(path));
-
-  if (isPublic) {
-    return next();
-  }
-
+  if (publicPaths.some((path) => req.path.startsWith(path))) return next();
   verifyKeycloakToken(req, res, next);
 });
 
-
-// Configurar la sesión
-app.use(
-  session({
-    secret: 'my-secret',
-    resave: false,
-    saveUninitialized: true,
-    store: memoryStore
-  })
-);
-
-// Inicializar Keycloak
-app.use(keycloak.middleware());
-
-// Conectar a la base de datos
+// Conectar a la base de datos con manejo adecuado de errores
 sequelize.sync()
-  .then(() => console.log('Base de datos conectada'))
-  .catch((err) => console.error('Error al conectar a la base de datos:', err));
+  .then(() => console.log("Base de datos conectada correctamente"))
+  .catch((err) => console.error("Error al conectar a la base de datos:", err));
 
-
-// Rutas públicas (sin autenticación)
-app.get('/api/public', (req, res) => {
-  res.json({ message: 'Esta es una ruta pública' });
+// Rutas públicas
+app.get("/api/public", (req, res) => {
+  res.json({ message: "Esta es una ruta pública" });
 });
 
-// Importar rutas
-const usuariosRoutes    = require("./routes/usuarios");
-const clientesRoutes    = require("./routes/clientes");
-const puntosSeguridadRoutes   = require("./routes/puntosSeguridad");
-const rolesRoutes       = require("./routes/roles");
-const empleadosRoutes   = require("./routes/empleados");
-const turnosRoutes      = require("./routes/turnos");
-const asistenciasRoutes = require("./routes/asistencias");
-const horariosRotativosRoutes = require("./routes/horariosRotativos");
-
-// Crear y proteger rutas
+// Importar y agrupar rutas protegidas
 const rutasProtegidas = express.Router();
-rutasProtegidas.use(usuariosRoutes);
-rutasProtegidas.use(clientesRoutes);
-rutasProtegidas.use(puntosSeguridadRoutes);
-rutasProtegidas.use(rolesRoutes);
-rutasProtegidas.use(empleadosRoutes);
-rutasProtegidas.use(turnosRoutes);
-rutasProtegidas.use(asistenciasRoutes);
-rutasProtegidas.use(horariosRotativosRoutes);
 
-// Proteger todas las rutas que empiecen con /api
-app.use('/api', keycloak.protect('realm:admin'), rutasProtegidas);
+const rutas = [
+  "usuarios",
+  "clientes",
+  "puntosSeguridad",
+  "roles",
+  "empleados",
+  "turnos",
+  "asistencias",
+  "horariosRotativos"
+];
 
+rutas.forEach((ruta) => {
+  rutasProtegidas.use(require(`./routes/${ruta}`));
+});
+
+// Aplicar middleware para proteger todas las rutas dentro de `/api`
+app.use("/api", verifyKeycloakToken, rutasProtegidas);
+
+// Documentación Swagger
 swaggerDocs(app);
 
 // Ruta raíz
-app.get('/', (req, res) => {
-  res.send('API Seguridad Funcionando 🚀');
+app.get("/", (req, res) => {
+  res.send("API Seguridad Funcionando 🚀");
 });
 
+// Iniciar servidor de manera segura
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

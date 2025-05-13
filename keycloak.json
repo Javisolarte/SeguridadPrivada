@@ -1,8 +1,8 @@
 {
-  "realm": "seguridad-api",
+  "realm": "seguridad_realm",
   "auth-server-url": "http://localhost:8080",
   "ssl-required": "external",
-  "resource": "api-node",
+  "resource": "admin",
   "public-client": true,
   "confidential-port": 0
 }
