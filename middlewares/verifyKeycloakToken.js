@@ -3,7 +3,6 @@ const jwksClient = require("jwks-rsa");
 
 const client = jwksClient({
   jwksUri: "http://keycloak:8080/realms/seguridad_realm/protocol/openid-connect/certs",
-
 });
 
 // Convertimos getSigningKey (callback) a Promesa

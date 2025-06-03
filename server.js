@@ -19,7 +19,7 @@ const app = express();
 
 // Configuración de CORS para mejorar la seguridad y permitir múltiples dominios
 app.use(cors({
-  origin: ["http://localhost:3000", "https://tudominio.com"],
+  origin: ["http://localhost:3000", "http://localhost:4200"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
